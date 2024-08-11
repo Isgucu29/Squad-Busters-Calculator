@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squad Busters Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #333;
+            --container-bg: #ffffff;
+            --button-bg: #007bff;
+            --button-text: #fff;
+            --button-hover-bg: #0056b3;
+            --result-bg: #e9ecef;
+            --icon-color: #333;
+            --back-button-bg: #dc3545;
+            --back-button-hover-bg: #c82333;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: var(--container-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #007bff;
+        }
+        .menu, .submenu {
+            margin-bottom: 20px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: var(--button-hover-bg);
+        }
+        input[type="number"] {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--result-bg);
+            border-radius: 4px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--icon-color);
+            transition: color 0.3s ease;
+        }
+        .theme-toggle:hover {
+            color: #007bff;
+        }
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --container-bg: #1f1f1f;
+            --button-bg: #1e88e5;
+            --button-text: #fff;
+            --button-hover-bg: #1565c0;
+            --result-bg: #2c2c2c;
+            --icon-color: #e0e0e0;
+        }
+        .back-button {
+            background-color: var(--back-button-bg);
+            color: var(--button-text);
+        }
+        .back-button:hover {
+            background-color: var(--back-button-hover-bg);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <i class="fas fa-sun theme-toggle" onclick="toggleTheme()" id="theme-icon"></i>
+    <i class="fas fa-moon theme-toggle" onclick="toggleTheme()" id="moon-icon" style="display: none;"></i>
+    <h1>Menú Principal</h1>
+    <p>Selecciona el programa que deseas ejecutar:</p>
+    <div class="menu">
+        <button onclick="showSubmenu(1)">Calculador de Estadísticas</button>
+        <button onclick="showSubmenu(2)">Calculador de Puntos de Portal</button>
+        <button onclick="showSubmenu(3)">Calculador para Ultras</button>
+    </div>
+
+    <!-- Submenu 1: Calculador de Estadísticas -->
+    <div id="submenu1" class="submenu" style="display:none;">
+        <h2>Calculador de Estadísticas</h2>
+        <div class="menu">
+            <button onclick="showForm(1)">Calcular Winrate</button>
+            <button onclick="showForm(2)">Calcular Top 3</button>
+            <button onclick="showForm(3)">Calcular Promedio de Kills</button>
+            <button onclick="showForm(4)">Calcular Promedio de Gemas</button>
+            <button onclick="goBack()" class="back-button">Volver al Menú Principal</button>
+        </div>
+        
+        <div id="formulario" style="display:none;">
+            <label id="label1"></label>
+            <input type="number" id="input1" placeholder="Introduce el primer número">
+            
+            <label id="label2"></label>
+            <input type="number" id="input2" placeholder="Introduce el segundo número">
+            
+            <button onclick="calcular()">Calcular</button>
+        </div>
+        
+        <div id="resultado" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Submenu 2: Calculador de Puntos de Portal -->
+    <div id="submenu2" class="submenu" style="display:none;">
+        <h2>Calculador de Puntos de Portal</h2>
+        <div id="portalForm">
+            <label for="nivel1">Introduce cuántos personajes de nivel 1 tienes:</label>
+            <input type="number" id="nivel1" placeholder="Nivel 1">
+            
+            <label for="nivel2">Introduce cuántos personajes de nivel 2 tienes:</label>
+            <input type="number" id="nivel2" placeholder="Nivel 2">
+            
+            <label for="nivel3">Introduce cuántos personajes de nivel 3 tienes:</label>
+            <input type="number" id="nivel3" placeholder="Nivel 3">
+            
+            <button onclick="calcularPortal()">Calcular Puntos de Portal</button>
+        </div>
+        
+        <div id="portalResultado" class="result" style="display:none;"></div>
+        <button onclick="goBack()" class="back-button">Volver al Menú Principal</button>
+    </div>
+
+    <!-- Submenu 3: Calculador para Ultras -->
+    <div id="submenu3" class="submenu" style="display:none;">
+        <h2>Calculador para Ultras</h2>
+        <div id="personajesForm">
+            <label for="nivel1_p">Introduce cuántos personajes de nivel 1 tienes:</label>
+            <input type="number" id="nivel1_p" placeholder="Nivel 1">
+            
+            <label for="nivel2_p">Introduce cuántos personajes de nivel 2 tienes:</label>
+            <input type="number" id="nivel2_p" placeholder="Nivel 2">
+            
+            <label for="nivel3_p">Introduce cuántos personajes de nivel 3 tienes:</label>
+            <input type="number" id="nivel3_p" placeholder="Nivel 3">
+            
+            <button onclick="calcularPersonajes()">Calcular Personajes</button>
+        </div>
+        
+        <div id="personajesResultado" class="result" style="display:none;"></div>
+        <button onclick="goBack()" class="back-button">Volver al Menú Principal</button>
+    </div>
+</div>
+
+<script>
+    let opcionSeleccionada = 0;
+    let totalPuntosPortal = 0;
+    let contadorPersonajes = 0;
+
+    function showSubmenu(opcion) {
+        document.getElementById("submenu1").style.display = opcion === 1 ? "block" : "none";
+        document.getElementById("submenu2").style.display = opcion === 2 ? "block" : "none";
+        document.getElementById("submenu3").style.display = opcion === 3 ? "block" : "none";
+        document.querySelector(".menu").style.display = "none";
+    }
+
+    function showForm(opcion) {
+        opcionSeleccionada = opcion;
+        document.getElementById("formulario").style.display = "block";
+        document.getElementById("resultado").style.display = "none";
+
+        const label1 = document.getElementById("label1");
+        const label2 = document.getElementById("label2");
+
+        if (opcionSeleccionada === 1) {
+            label1.textContent = "Victorias totales";
+        } else if (opcionSeleccionada === 2) {
+            label1.textContent = "Top 3 totales";
+        } else if (opcionSeleccionada === 3) {
+            label1.textContent = "Kills totales";
+        } else if (opcionSeleccionada === 4) {
+            label1.textContent = "Gemas totales";
+        }
+        label2.textContent = "Partidas totales";
+    }
+
+    function calcular() {
+        const input1 = parseFloat(document.getElementById("input1").value);
+        const input2 = parseFloat(document.getElementById("input2").value);
+        let resultado = 0;
+
+        if (opcionSeleccionada === 1 || opcionSeleccionada === 2) {
+            resultado = (input1 / input2) * 100;
+            resultado = `Tienes un ${opcionSeleccionada === 1 ? 'winrate' : 'porcentaje de top 3'} de ${resultado.toFixed(3)}%`;
+        } else if (opcionSeleccionada === 3 || opcionSeleccionada === 4) {
+            resultado = (input1 / input2);
+            resultado = `Tienes una media de ${resultado.toFixed(1)} ${opcionSeleccionada === 3 ? 'kills' : 'gemas'} por partida.`;
+        }
+
+        document.getElementById("resultado").innerText = resultado;
+        document.getElementById("resultado").style.display = "block";
+    }
+
+    function calcularPortal() {
+        let nivel1 = parseInt(document.getElementById("nivel1").value);
+        let nivel2 = parseInt(document.getElementById("nivel2").value);
+        let nivel3 = parseInt(document.getElementById("nivel3").value);
+
+        // Calcular puntos de nivel 1
+        let puntos1 = Math.floor(nivel1 / 10) * 100;
+        nivel2 += Math.floor(nivel1 / 10);
+
+        // Calcular puntos de nivel 2
+        let puntos2 = Math.floor(nivel2 / 10) * 200;
+        nivel3 += Math.floor(nivel2 / 10);
+
+        // Calcular puntos de nivel 3
+        let puntos3 = Math.floor(nivel3 / 10) * 300;
+
+        let puntos = puntos1 + puntos2 + puntos3;
+        totalPuntosPortal += puntos;
+        contadorPersonajes += 1;
+
+        const resultado = `Total de puntos de portal de este personaje: ${puntos}\nTotal acumulado: ${totalPuntosPortal}\nPersonajes calculados: ${contadorPersonajes}`;
+
+        document.getElementById("portalResultado").innerText = resultado;
+        document.getElementById("portalResultado").style.display = "block";
+    }
+
+    function calcularPersonajes() {
+        let nivel1 = parseInt(document.getElementById("nivel1_p").value);
+        let nivel2 = parseInt(document.getElementById("nivel2_p").value);
+        let nivel3 = parseInt(document.getElementById("nivel3_p").value);
+
+        let personajes2 = nivel2 * 10;
+        let personajes3 = nivel3 * 100;
+
+        let total = nivel1 + personajes2 + personajes3;
+
+        let resultado;
+        if (total <= 1000) {
+            resultado = `En total tienes ${total} personajes.\nTe quedan un total de ${1000 - total} personajes para el ultra.`;
+        } else {
+            resultado = `En total tienes ${total} personajes.\nYa tienes el ultra y te sobran un total de ${total - 1000} personajes.`;
+        }
+
+        document.getElementById("personajesResultado").innerText = resultado;
+        document.getElementById("personajesResultado").style.display = "block";
+    }
+
+    function goBack() {
+        document.getElementById("submenu1").style.display = "none";
+        document.getElementById("submenu2").style.display = "none";
+        document.getElementById("submenu3").style.display = "none";
+        document.querySelector(".menu").style.display = "block";
+        document.getElementById("formulario").style.display = "none";
+        document.getElementById("portalResultado").style.display = "none";
+        document.getElementById("personajesResultado").style.display = "none";
+        document.getElementById("portalForm").reset();
+        document.getElementById("personajesForm").reset();
+        opcionSeleccionada = 0;
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+        const sunIcon = document.getElementById("theme-icon");
+        const moonIcon = document.getElementById("moon-icon");
+        if (document.body.classList.contains("dark-mode")) {
+            sunIcon.style.display = "none";
+            moonIcon.style.display = "inline";
+        } else {
+            sunIcon.style.display = "inline";
+            moonIcon.style.display = "none";
+        }
+    }
+
+    window.onload = function() {
+        const themeIcon = document.getElementById("theme-icon");
+        const moonIcon = document.getElementById("moon-icon");
+        if (document.body.classList.contains("dark-mode")) {
+            themeIcon.style.display = "none";
+            moonIcon.style.display = "inline";
+        } else {
+            themeIcon.style.display = "inline";
+            moonIcon.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
